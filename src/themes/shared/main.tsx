@@ -40,7 +40,7 @@ export const globalStyles = StyleSheet.create({
     },
     alertButton: {
         ...buttonCommonStyle.button,
-        backgroundColor: 'orange'
+        backgroundColor: '#FF9427'
     },
     primaryTextButton: {
         color: 'white',

@@ -5,12 +5,12 @@ import { globalStyles } from '../themes/shared/main'
 
 interface IButton {
     text: string;
-    type: "primary" | "secondary" | "alert",
+    type?: "primary" | "secondary" | "alert",
     style?: StyleProp<ViewStyle>
 }
 
 
-export const Button = ({ type, text, style }: IButton) => {
+export const Button = ({ type='primary', text, style }: IButton) => {
     const [buttonStyle, setButtonStyle] = useState<StyleProp<ViewStyle>>();
     const [textStyle, setTextStyle] = useState<any>();
 
@@ -33,7 +33,7 @@ export const Button = ({ type, text, style }: IButton) => {
     }, [type]);
 
     return (
-        <TouchableOpacity style={[buttonStyle, style]}>
+        <TouchableOpacity activeOpacity={0.7} style={[buttonStyle, style]}>
             <Text style={textStyle}> {text} </Text>
         </TouchableOpacity>
     )

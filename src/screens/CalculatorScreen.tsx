@@ -15,26 +15,26 @@ export const CalculatorScreen = () => {
                 <Button text='/' type='alert'></Button>
             </View>
             <View style={styles.row}>
-                <Button text='7' type='primary'></Button>
-                <Button text='8' type='primary'></Button>
-                <Button text='9' type='primary'></Button>
+                <Button text='7'></Button>
+                <Button text='8'></Button>
+                <Button text='9'></Button>
                 <Button text='X' type='alert'></Button>
             </View>
             <View style={styles.row}>
-                <Button text='4' type='primary'></Button>
-                <Button text='5' type='primary'></Button>
-                <Button text='6' type='primary'></Button>
+                <Button text='4'></Button>
+                <Button text='5'></Button>
+                <Button text='6'></Button>
                 <Button text='-' type='alert'></Button>
             </View>
             <View style={styles.row}>
-                <Button text='1' type='primary'></Button>
-                <Button text='2' type='primary'></Button>
-                <Button text='3' type='primary'></Button>
+                <Button text='1'></Button>
+                <Button text='2'></Button>
+                <Button text='3'></Button>
                 <Button text='+' type='alert'></Button>
             </View>
             <View style={styles.row}>
-                <Button text='0' type='primary' style={styles.zeroButton}></Button>
-                <Button text='.' type='primary'></Button>
+                <Button text='0' style={styles.zeroButton}></Button>
+                <Button text='.'></Button>
                 <Button text='=' type='alert'></Button>
             </View>
         </View>
