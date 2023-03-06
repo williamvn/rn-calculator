@@ -26,9 +26,16 @@ const reducer = ({ result, hold }: IOperationState, action: OPAction): IOperatio
             if (result == "0") {
                 return { result: action.value ?? "0", hold };
             }
+            else if (result == "-0") {
+                return { result: "-" + action.value ?? "0", hold };
+            }
             else {
                 return { result: result + action.value, hold };
             }
+        case OP.NEG:
+            return { result: result.startsWith("-") ? result.slice(1) : "-" + result, hold };
+        case OP.DEL:
+            return { result: result.slice(0, -1), hold };
         case OP.C:
             return { hold: "", result: "0" };
         default:

@@ -12,17 +12,19 @@ export const CalculatorScreen = () => {
     const formattedHold = useMemo(() => formatNumber(hold), [hold]);
 
     function formatNumber(value: string) {
-        if (value.length > 3 && !value.includes(",")) {
-            let formatted = value[0];
-            for (let i = 1; i < value.length; i++) {
-                if ((value.length - i) % 3 == 0) {
+        const positiveValue = value.startsWith("-")? value.slice(1): value;
+        const minus = value.startsWith("-")? "-": "";
+        if (positiveValue.length > 3 && !positiveValue.includes(",")) {
+            let formatted = positiveValue[0];
+            for (let i = 1; i < positiveValue.length; i++) {
+                if ((positiveValue.length - i) % 3 == 0) {
                     formatted += ".";
                 }
-                formatted += value[i];
+                formatted += positiveValue[i];
             }
-            return formatted;
+            return minus + formatted;
         }
-        return value;
+        return minus + positiveValue;
     }
 
 
