@@ -8,10 +8,11 @@ interface IButton {
     type?: "primary" | "secondary" | "alert",
     style?: StyleProp<ViewStyle>
     onPress?: (...args: any[]) => any;
+    active?: boolean
 }
 
 
-export const Button = ({ type = 'primary', text, style, onPress }: IButton) => {
+export const Button = ({ type = 'primary', text, style, onPress, active }: IButton) => {
     const [buttonStyle, setButtonStyle] = useState<StyleProp<ViewStyle>>();
     const [textStyle, setTextStyle] = useState<any>();
 
@@ -34,8 +35,14 @@ export const Button = ({ type = 'primary', text, style, onPress }: IButton) => {
     }, [type]);
 
     return (
-        <TouchableOpacity activeOpacity={0.7} style={[buttonStyle, style]} onPress={onPress}>
+        <TouchableOpacity activeOpacity={0.7} style={[buttonStyle, style].concat(active ? styles.active : [])} onPress={onPress}>
             <Text style={textStyle}> {text} </Text>
         </TouchableOpacity>
     )
 }
+
+const styles = StyleSheet.create({
+    active: {
+        opacity: 0.7
+    }
+});
