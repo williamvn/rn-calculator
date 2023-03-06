@@ -1,41 +1,63 @@
-import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useMemo, useState } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { OP, useOperationReducer } from '../../hooks/useOperationReducer'
 import { Button } from '../components/Button'
 import { globalStyles } from '../themes/shared/main'
 
+
 export const CalculatorScreen = () => {
+    const { state, dispatch } = useOperationReducer("0", "");
+    const { result, hold } = state;
+    const formattedResult = useMemo(() => formatNumber(result), [result]);
+    const formattedHold = useMemo(() => formatNumber(hold), [hold]);
+
+    function formatNumber(value: string) {
+        if (value.length > 3 && !value.includes(",")) {
+            let formatted = value[0];
+            for (let i = 1; i < value.length; i++) {
+                if ((value.length - i) % 3 == 0) {
+                    formatted += ".";
+                }
+                formatted += value[i];
+            }
+            return formatted;
+        }
+        return value;
+    }
+
+
     return (
         <View style={styles.container}>
-            <Text style={globalStyles.secondaryText}>15,000</Text>
-            <Text style={globalStyles.primaryText}>15,000</Text>
+            <Text style={globalStyles.secondaryText}>{formattedHold}</Text>
+            <Text style={globalStyles.primaryText} numberOfLines={1} adjustsFontSizeToFit> {formattedResult} </Text>
             <View style={styles.row}>
-                <Button text='C' type='secondary'></Button>
-                <Button text='+/-' type='secondary'></Button>
-                <Button text='del' type='secondary'></Button>
-                <Button text='/' type='alert'></Button>
+                <Button text='C' type='secondary' onPress={() => dispatch({ type: OP.C })}></Button>
+                <Button text='+/-' type='secondary' onPress={() => dispatch({ type: OP.NEG })}></Button>
+                <Button text='del' type='secondary' onPress={() => dispatch({ type: OP.DEL })}></Button>
+                <Button text='/' type='alert' onPress={() => dispatch({ type: OP.DIV })}></Button>
             </View>
             <View style={styles.row}>
-                <Button text='7'></Button>
-                <Button text='8'></Button>
-                <Button text='9'></Button>
-                <Button text='X' type='alert'></Button>
+                <Button text='7' onPress={() => dispatch({ type: OP.NUM, value: "7" })}></Button>
+                <Button text='8' onPress={() => dispatch({ type: OP.NUM, value: "8" })}></Button>
+                <Button text='9' onPress={() => dispatch({ type: OP.NUM, value: "9" })}></Button>
+                <Button text='X' type='alert' onPress={() => dispatch({ type: OP.MULT })}></Button>
             </View>
             <View style={styles.row}>
-                <Button text='4'></Button>
-                <Button text='5'></Button>
-                <Button text='6'></Button>
-                <Button text='-' type='alert'></Button>
+                <Button text='4' onPress={() => dispatch({ type: OP.NUM, value: "4" })}></Button>
+                <Button text='5' onPress={() => dispatch({ type: OP.NUM, value: "5" })}></Button>
+                <Button text='6' onPress={() => dispatch({ type: OP.NUM, value: "6" })}></Button>
+                <Button text='-' type='alert' onPress={() => dispatch({ type: OP.SUB })}></Button>
             </View>
             <View style={styles.row}>
-                <Button text='1'></Button>
-                <Button text='2'></Button>
-                <Button text='3'></Button>
-                <Button text='+' type='alert'></Button>
+                <Button text='1' onPress={() => dispatch({ type: OP.NUM, value: "1" })}></Button>
+                <Button text='2' onPress={() => dispatch({ type: OP.NUM, value: "2" })}></Button>
+                <Button text='3' onPress={() => dispatch({ type: OP.NUM, value: "3" })}></Button>
+                <Button text='+' type='alert' onPress={() => dispatch({ type: OP.PLUS })}></Button>
             </View>
             <View style={styles.row}>
-                <Button text='0' style={styles.zeroButton}></Button>
-                <Button text='.'></Button>
-                <Button text='=' type='alert'></Button>
+                <Button text='0' style={styles.zeroButton} onPress={() => dispatch({ type: OP.NUM, value: "0" })}></Button>
+                <Button text='.' onPress={() => dispatch({ type: OP.DOT })}></Button>
+                <Button text='=' type='alert' onPress={() => dispatch({ type: OP.EQ })}></Button>
             </View>
         </View>
     )

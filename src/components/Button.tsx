@@ -7,10 +7,11 @@ interface IButton {
     text: string;
     type?: "primary" | "secondary" | "alert",
     style?: StyleProp<ViewStyle>
+    onPress?: (...args: any[]) => any;
 }
 
 
-export const Button = ({ type='primary', text, style }: IButton) => {
+export const Button = ({ type = 'primary', text, style, onPress }: IButton) => {
     const [buttonStyle, setButtonStyle] = useState<StyleProp<ViewStyle>>();
     const [textStyle, setTextStyle] = useState<any>();
 
@@ -33,7 +34,7 @@ export const Button = ({ type='primary', text, style }: IButton) => {
     }, [type]);
 
     return (
-        <TouchableOpacity activeOpacity={0.7} style={[buttonStyle, style]}>
+        <TouchableOpacity activeOpacity={0.7} style={[buttonStyle, style]} onPress={onPress}>
             <Text style={textStyle}> {text} </Text>
         </TouchableOpacity>
     )
