@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { StyleSheet, Text, Vibration, View } from 'react-native'
 import { OP, OPAction, useOperationReducer } from '../../hooks/useOperationReducer'
 import { Button } from '../components/Button'
@@ -72,7 +72,6 @@ export const CalculatorScreen = () => {
         </View>
     )
 }
-
 
 const styles = StyleSheet.create({
     container: {

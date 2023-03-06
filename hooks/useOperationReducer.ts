@@ -3,7 +3,8 @@ import { useReducer } from "react";
 interface IOperationState {
     result: string,
     hold: string,
-    activeOp?: OP
+    activeOp?: OP,
+    resultDisplayed?: boolean
 }
 
 export enum OP {
@@ -22,13 +23,13 @@ type OPPayload = { value?: string, prevOP?: OP };
 export type OPAction = { type: OP, payload?: OPPayload };
 
 const reducer = (state: IOperationState, action: OPAction): IOperationState => {
-    const { result, hold, activeOp } = state;
+    const { result, hold, activeOp, resultDisplayed } = state;
     if (result == "N/A") {
         return { result: "0", hold: "" }
     }
     switch (action.type) {
         case OP.NUM:
-            return { ...state, ...buildNumber(result, hold, action.payload ?? {}) };
+            return { ...state, ...buildNumber(result, hold, resultDisplayed, action.payload ?? {}), resultDisplayed: false };
         case OP.PLUS:
             return apply(result, hold, activeOp, OP.PLUS);
         case OP.SUB:
@@ -39,7 +40,7 @@ const reducer = (state: IOperationState, action: OPAction): IOperationState => {
             return apply(result, hold, activeOp, OP.DIV);
         case OP.EQ:
             if (activeOp != undefined) {
-                return { result: getOpFunc(activeOp).apply(hold, result), hold: "" }
+                return { result: getOpFunc(activeOp).apply(hold, result), hold: "", resultDisplayed: true }
             }
             return state;
         case OP.DOT:
@@ -60,16 +61,15 @@ const reducer = (state: IOperationState, action: OPAction): IOperationState => {
 
 function getOpFunc(op: OP): { apply: ((a: string, b: string) => string) } {
     const funcs: { [key in OP]?: (a: string, b: string) => string } = {
-        [OP.PLUS]: (a: string, b: string) => (parseFloat(a.replace(",", ".")) + parseFloat(b.replace(",", "."))).toString(),
-        [OP.SUB]: (a: string, b: string) => (parseFloat(a.replace(",", ".")) - parseFloat(b.replace(",", "."))).toString(),
-        [OP.MULT]: (a: string, b: string) => (parseFloat(a.replace(",", ".")) * parseFloat(b.replace(",", "."))).toString(),
-        [OP.DIV]: (a: string, b: string) => parseFloat(b.replace(",", ".")) != 0 ? (parseFloat(a.replace(",", ".")) / parseFloat(b.replace(",", "."))).toString() : "N/A",
+        [OP.PLUS]: (a: string, b: string) => (parseFloat(a.replace(",", ".")) + parseFloat(b.replace(",", "."))).toString().replace(".", ","),
+        [OP.SUB]: (a: string, b: string) => (parseFloat(a.replace(",", ".")) - parseFloat(b.replace(",", "."))).toString().replace(".", ","),
+        [OP.MULT]: (a: string, b: string) => (parseFloat(a.replace(",", ".")) * parseFloat(b.replace(",", "."))).toString().replace(".", ","),
+        [OP.DIV]: (a: string, b: string) => parseFloat(b.replace(",", ".")) != 0 ? (parseFloat(a.replace(",", ".")) / parseFloat(b.replace(",", "."))).toString().replace(".", ",") : "N/A",
     }
     return { apply: funcs[op] ?? ((a: string, b: string) => "") }
 }
 
 function apply(result: string, hold: string, activeOp: OP = OP.PLUS, newOP: OP) {
-
     if (!hold) {
         return { result: "0", hold: result, activeOp: newOP };
     }
@@ -78,8 +78,8 @@ function apply(result: string, hold: string, activeOp: OP = OP.PLUS, newOP: OP) 
     }
 }
 
-function buildNumber(result: string, hold: string, payload: OPPayload) {
-    if (result == "0") {
+function buildNumber(result: string, hold: string, resultDisplayed: boolean = false, payload: OPPayload) {
+    if (result == "0" || resultDisplayed) {
         return { result: payload.value ?? "0", hold };
     }
     else if (result == "-0") {
@@ -94,9 +94,3 @@ export function useOperationReducer(initResult: string, initHold: string) {
     const [state, dispatch] = useReducer(reducer, { result: initResult, hold: initHold });
     return { state, dispatch };
 }
-
-
-
-
-
-
